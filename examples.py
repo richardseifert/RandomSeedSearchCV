@@ -8,7 +8,8 @@ if __name__ == '__main__':
     X = boston['data']
     y = boston['target']
 
-    res = RandomSeedSearchCV(randomseed_rfr_maker,X,y,validation=0.2,N=100)
+    rsscv = RandomSeedSearchCV(randomseed_rfr_maker,validation=0.2,n_iter=10)
+    res = rsscv.fit(X,y)
     best_model = randomseed_rfr_maker(int(res[0,0]))
     best_model.fit(X,y)
     y_pred = best_model.predict(X)
