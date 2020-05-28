@@ -9,8 +9,6 @@ from sklearn.metrics import get_scorer
 import tensorflow as tf
 from tensorflow import keras
 
-
-
 class RandomSeedSearchCV:
     '''
     Generalized random-search model tuner! Uses random seeds and user-made model-maker function to search
@@ -143,7 +141,6 @@ class RandomSeedSearchCV:
         else:
             sort = np.argsort(valid_metric)
             return np.c_[seeds[sort],train_metric[sort],valid_metric[sort],times[sort]]
-    
 
 
 ################################################################################
@@ -178,16 +175,22 @@ def rand_util(inp1=0,inp2=1,dist='uniform',dtype='float',P_None=0.0,override=Non
     
     #Draw value to be returned
     if dist=='uniform':
-        if dtype=='int':
+        if inp1 > inp2: #Ensure ascending order
+            tmp = inp1
+            inp1 = inp2
+            inp2 = tmp
+        if inp1 == inp2: #If equal, no need to sample.
+            return inp1 
+        if dtype==int:
             return np.random.randint(inp1,inp2)
-        elif dtype=='float':
+        elif dtype==float:
             return np.random.uniform(inp1,inp2)
         else:
             raise ValueError("Unrecognized dtype %s. Try one of 'int', 'float'."%(dtype))
     elif dist=='normal':
-        if dtype=='int':
+        if dtype==int:
             return int(np.round(np.random.normal(inp1,inp2)))
-        elif dtype=='float':
+        elif dtype==float:
             return np.random.normal(inp1,inp2)
         else:
             raise ValueError("Unrecognized dtype %s. Try one of 'int', 'float'."%(dtype))
